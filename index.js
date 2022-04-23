@@ -23,7 +23,7 @@ class DoubleLinkedList {
     }
 
     remove(value) {
-        if (this.head.next.value == value) {
+        if (this.head.next.value.value == value) {
             this.head.next = this.head.next.next
             this.head.next.previous = this.head;
             this.totalNodes -= 1
@@ -31,7 +31,7 @@ class DoubleLinkedList {
 
         let item = this.head.next;
         while (item != null) {
-            if (item.value == value) {
+            if (item.value.value == value) {
                 item.previous.next = item.next
                 item.previous.next.previous = item.previous
                 this.totalNodes -= 1
@@ -87,8 +87,9 @@ class LRU {
     get(key) {
         const item = this.keyValue[key];
         if (item) {
-            this.doubleLinkedList.remove(item);
-            this.doubleLinkedList.add(item)
+            delete this.keyValue[key]
+            this.doubleLinkedList.remove(item.value.value);
+            this.doubleLinkedList.add(item.value)
         }
 
         return null
@@ -96,22 +97,23 @@ class LRU {
 
     getKeyValue() {
         console.log(this.keyValue)
-        console.log("@@@@@@@@@@@@@@@@@@@@@@")
-        this.doubleLinkedList.toString()
+        // console.log("@@@@@@@@@@@@@@@@@@@@@@")
+        // this.doubleLinkedList.toString()
     }
 }
 
 const lruCache = new LRU(2);
 lruCache
-        .add("test", "teste")
+        .add("test", "teste") // RECENTLY USAGE
         .add("test1", "teste1")
-        .add("test20", "teste20")
-        .add("test200", "teste200")
-        .add("test2000", "teste2000")
-        .add("test200", "test200")
-        .add("test2000", "test2000")
-        .add("test1", "teste1")
-        .add("test2", "teste1")
-        .get("test1")
+        .get("test")
+
+lruCache
+        .add("test2", "test") // MAINTAIN [test, test2]
+        .get("test")
+
+lruCache.add("john", "mary") // MAINTAIN [test, john]
+
+    
 
 lruCache.getKeyValue()
